@@ -1,0 +1,33 @@
+package com.wy.servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.wy.pojo.User;
+import com.wy.service.AjaxCheck;
+import com.wy.serviceImpl.AjaxCheckImpl;
+
+/**
+ * Servlet implementation class AjaxServlet
+ */
+public class AjaxServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    @Override
+    	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    		String username=(String) req.getParameter("username");
+    		AjaxCheck ajaxCheck=new AjaxCheckImpl();
+    		User user = ajaxCheck.CheckUserName(username);
+    		if(user!=null) { //用户名存在
+    			resp.getWriter().write("{ 'request':'404' }");
+    		}
+    		else {//用户名不存在
+    			resp.getWriter().write("{ 'request':'200' }");
+    		}
+    	}
+    
+
+}

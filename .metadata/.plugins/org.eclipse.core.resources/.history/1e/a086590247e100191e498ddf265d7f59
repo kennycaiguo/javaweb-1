@@ -1,0 +1,120 @@
+package com.wy.daoImpl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
+import com.wy.dao.ServletDao;
+import com.wy.pojo.User;
+import com.wy.util.DbUtil;
+
+public class ServletDaoImpl implements ServletDao {
+
+	@Override
+	public User checkUsername(String username) throws Exception {
+		User u = null;
+		Connection con=null;
+		PreparedStatement pst =null;
+		ResultSet tOf=null;
+		try {
+			con=DbUtil.getConnection();
+			String sql = "select * from User where username=?";
+			pst = con.prepareStatement(sql);
+			pst.setString(1, username);
+			tOf= pst.executeQuery();
+			if(tOf.next()) {
+				u=new User();
+				u.setUsername(tOf.getString("username"));
+				u.setPwd(tOf.getString("pwd"));
+				u.setNumber(tOf.getString("number"));
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				tOf.close();
+				com.wy.util.DbUtil.close(pst,con);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return u;
+	}
+
+	@Override
+	public int registerDao(User user) throws Exception {
+		Connection con=null;
+		PreparedStatement pst =null;
+		int tOf = 0;
+		try {
+			con=DbUtil.getConnection();
+			String sql = "insert into user values(?,?,?)";
+			pst = con.prepareStatement(sql);
+			pst.setString(1, user.getUsername());
+			pst.setString(2, user.getNumber());
+			pst.setString(3, user.getPwd());
+			tOf= pst.executeUpdate();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				DbUtil.close(pst, con);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return tOf;
+	}
+
+	@Override
+	public User checkLoginDao(User user) throws Exception {
+		Connection con=null;
+		PreparedStatement pst =null;
+		ResultSet result = null;
+		User u=null;
+		try {
+			con=DbUtil.getConnection();
+			String sql = "select * from user where username=? and password=?";
+			pst = con.prepareStatement(sql);
+			pst.setString(1, user.getUsername());
+			pst.setString(2, user.getPwd());
+			result=pst.executeQuery();
+			if(result.next()) {
+				u=new User();
+				u.setUsername(result.getString("username"));
+				u.setPwd(result.getString("pwd"));
+				u.setNumber(result.getString("number"));
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				DbUtil.close(pst, con);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return u;
+	}
+
+}

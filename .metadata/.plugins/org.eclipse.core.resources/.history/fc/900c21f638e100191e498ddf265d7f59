@@ -1,0 +1,142 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+   <%
+	String path = request.getContextPath(); //????????
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	%>
+<!DOCTYPE html>
+<html>
+	<head>
+	<base href="<%= basePath%>">
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			#Code{
+				color: #000000;
+				background-image: url(code.jpg);
+			}
+		</style>
+		<script type="text/javascript">
+			//建立用户名检查结果全局变量，避免多余查询
+			var checkUnameBool 
+			//建立验证码全局变量
+			var code 
+			//生成验证码
+			function createCode(){
+				code = Math.floor(Math.random()*9000+1000);
+				var s=document.getElementById("Code");
+				s.textContent=code;
+			}
+			//封装检验内容
+			function check(id,reg){
+				//获取元素
+				var inp =document.getElementById(id);
+				var value=inp.value;
+				var alt=inp.alt;
+				//获取span标签
+				var sp =document.getElementById(id+"Span");
+				//检验数据
+				if(value==null||value=="")
+				{
+					console.log(value);
+					sp.innerText=alt+"不能为空";
+					sp.style.color="red";
+					return false;
+				}
+				else if(reg.test(value))
+				{
+					sp.innerText=alt+"ok";
+					sp.style.color="springgreen";
+					return true;
+				}else{
+					sp.innerText=alt+"不规范";
+					sp.style.color="red";
+					return false;
+				}
+			}
+			//检查用户名格式并校验用户名是否存在
+			function checkUname(t){
+				//填写ajax的代码,校验用户是否存在
+				var ajax
+				var flag = check(t.id,/^[a-z,A-Z,1-9,0]{2,8}$/)
+				if(window.XMLHttpRequest)
+				{
+					ajax=new XMLHttpRequest()
+				}else {
+					ajax=new ActiveXObject("Msxml2.XMLHTTP")
+				}
+				ajax.onreadystatechange=function(){
+					if(ajax.readyState==4){
+						//var result = ajax.responseText;
+						var result=eval(ajax.responseText)
+						console.log(result)
+						//校验用户名
+						if(flag)
+						{
+							if(result=="200"){
+								document.getElementById("unameSpan").innerText="用户名可用"
+							}
+							else{
+								document.getElementById("unameSpan").innerText="用户名重复"
+							}
+						}
+					}
+				}
+				ajax.open("get","/Ajax/userServlet?"+"username="+t.value)
+				//ajax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				ajax.send()
+				//checkUnameBool=(flag)&&(ajax.responseText)
+				return checkUnameBool
+			}
+			//检验密码格式是否正确
+			function checkPwd(t){
+				check(t.id,/^[&,^,*,<,>,#,@,~]{0}[a-z,1-9,A-Z]{8,16}/);
+			}
+			//设置用户同意协议方可注册
+			function checkArgee(){
+				document.getElementById("submitId").disabled= !document.getElementById("arg").checked
+			}
+			//校验验证码
+			function checkCode(){
+				var cod =document.getElementById("cod").value
+				var c=document.getElementById("checkC")
+				if(cod==code){
+					c.innerText="验证码正确"
+				}
+				else{
+					c.innerText="验证码错误"
+				}
+				
+			}
+			//查看各项是否按要求填写
+			function checkAll(name,pwd){
+				return checkUnameBool&&checkPwd(pwd)&&checkCode()
+			}
+			//提交时进行二次检查
+			function sub(){
+				var name = document.getElementById("uname")
+				var p = document.getElementById("pwd")
+				var oper= document.getElementById("oper")
+				var f=document.F
+				if(checkAll(name,p)){
+					f.submit()
+				}
+				else{
+					oper.value="error"
+				}
+			}
+		</script>
+	</head>
+	<body onload="createCode()" >
+		<form action="userServlet" name="F" method="post" >
+			<input type="hidden" id="oper" name="oper" value="register"/>
+			用户名：<input type="text" name="uname" id="uname" value="" onblur="checkUname(this)" alt="用户名"/><span id="unameSpan">用户名2~8位字母或数字组成</span><br />
+			密码：<input type="text" name="pwd" id="pwd" value="" alt="密码" onblur="checkPwd(this)"/><span id="pwdSpan">密码8~16位字母或数字组成</span><br />
+			手机号：<input type="text" name="Number" id="Number" alt="手机号"/><span id="NumberSpan"></span><br />
+			请输入验证码:<input type="text" name="cod" id="cod" value="" />
+			<span style="background-image: url(c.jpg);color: #000000;" id="Code" onclick="createCode()"></span><span id="checkC"></span><br />
+			<input type="checkbox" name="" id="arg" value="" onclick="checkArgee()"/>是否同意注册协议<br />
+			<input type="button" id="submitId"  value="注册" disabled="disabled" onclick="sub()"/>
+		</form>
+	</body>
+</html>

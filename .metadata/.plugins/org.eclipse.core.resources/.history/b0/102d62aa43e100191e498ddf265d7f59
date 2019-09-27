@@ -1,0 +1,19 @@
+package com.wy.serviceImpl;
+
+import com.wy.dao.ServletDao;
+import com.wy.daoImpl.ServletDaoImpl;
+import com.wy.pojo.User;
+import com.wy.service.UserCheck;
+
+public  class UserCheckImpl implements UserCheck {
+	private ServletDao dao=new ServletDaoImpl();
+	@Override
+	public User CheckUserName(String username) throws Exception {
+		return dao.checkUsername(username);
+		
+	}
+	@Override
+	public int RegisterService(User u) throws Exception {
+		return dao.registerDao(u);
+	}
+}

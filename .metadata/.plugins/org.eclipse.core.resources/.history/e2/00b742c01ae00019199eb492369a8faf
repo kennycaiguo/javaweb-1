@@ -1,0 +1,5 @@
+package com.wy.service.impl;
+
+public class AjaxCheckImpl implements AjaxCheck {
+
+}

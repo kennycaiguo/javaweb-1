@@ -1,0 +1,8 @@
+package com.wy.service;
+
+import com.wy.pojo.User;
+
+public interface AjaxCheck {
+	User CheckUserName(String username);
+	int register(User user);
+}

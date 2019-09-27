@@ -1,0 +1,14 @@
+package com.wy.serviceImpl;
+
+import com.wy.pojo.User;
+import com.wy.service.AjaxCheck;
+
+public class AjaxCheckImpl implements AjaxCheck {
+
+	@Override
+	public boolean CheckUserName(String username) {
+	
+		return null;
+	}
+
+}

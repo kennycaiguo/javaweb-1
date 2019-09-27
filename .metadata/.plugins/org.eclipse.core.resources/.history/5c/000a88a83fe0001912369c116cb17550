@@ -1,0 +1,43 @@
+package com.wy.serviceImpl;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.wy.pojo.User;
+import com.wy.service.AjaxCheck;
+
+/**
+ * Servlet implementation class AjaxLoginServlet
+ */
+public class AjaxLoginServlet extends HttpServlet {
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//设置请求格式
+		req.setCharacterEncoding("utf-8");
+		//设置响应格式
+		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("text/html");
+		//获取请求数据
+		User user=new User();
+		AjaxCheck registerStatus=new AjaxCheckImpl();
+		user.setUsername(req.getParameter("uname"));
+		user.setNumber(req.getParameter("Number"));
+		user.setPwd(req.getParameter("pwd"));
+		//处理请求数据
+		boolean tOf = registerStatus.register(user);
+		//响应数据
+		if(tOf)
+		{
+			resp.sendRedirect("/Ajax/main.jsp");
+		}
+		else {
+			req.setAttribute("status", tOf);
+			req.getRequestDispatcher("/error.jsp").forward(req, resp);
+		}
+		
+		
+	}
+}

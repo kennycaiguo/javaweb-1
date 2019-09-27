@@ -1,0 +1,9 @@
+package com.wy.service;
+
+import com.wy.pojo.User;
+
+public interface UserCheck {
+	User CheckUserName(String username) throws Exception;
+
+	int RegisterService(User u);
+}

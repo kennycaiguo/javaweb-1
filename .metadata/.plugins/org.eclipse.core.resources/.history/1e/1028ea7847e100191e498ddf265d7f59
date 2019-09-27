@@ -1,0 +1,96 @@
+package com.wy.servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.websocket.Session;
+
+import com.wy.pojo.User;
+import com.wy.service.UserCheck;
+import com.wy.serviceImpl.UserCheckImpl;
+
+/**
+ * Servlet implementation class UserServlet
+ */
+public class UserServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	UserCheck userCheck=new UserCheckImpl();
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("utf-8");
+		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("text/html");
+		String username=req.getParameter("username");
+		User user=null;
+		try {
+			user = userCheck.CheckUserName(username);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block				e.printStackTrace();
+		}
+		if(user!=null) { //用户名存在
+			resp.getWriter().write("{result:'400'}");
+		}
+		else {//用户名不存在
+			resp.getWriter().write("{result:'200'}");
+		}
+	}
+
+
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//设置请求编码格式
+		req.setCharacterEncoding("utf-8");
+		//设置响应编码
+		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("text/html");
+		//获取请求数据
+		User u=new User();
+		u.setUsername(req.getParameter("uname"));
+		u.setPwd(req.getParameter("pwd"));
+		u.setNumber(req.getParameter("Number"));
+		String value = req.getParameter("oper");
+		//处理请求数据
+		//响应结果
+		if(value.equals("login")) { //登录请求
+			try {
+				userLogin(u,req,resp);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else if(value.equals("register")) {//注册请求
+			try {
+				userRegister(u,req,resp);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+		}
+		
+	
+	}
+
+
+	private void userRegister(User u,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		int result= userCheck.RegisterService(u);
+			if(result==1) {
+				resp.sendRedirect("main.jsp");
+			}else {
+				resp.sendError(403, "拒绝你的注册");
+			}
+			
+	}
+
+
+	private void userLogin(User u,HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		User user= userCheck.checkLogin(u);
+		if(user!=null) {
+			resp.sendRedirect("main.jsp");
+		}
+		else {
+			resp.sendRedirect("error.jsp");
+		}
+	}
+	
+}
+
+

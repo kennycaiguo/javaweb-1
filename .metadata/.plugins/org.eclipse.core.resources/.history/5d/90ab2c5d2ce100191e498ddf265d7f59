@@ -1,0 +1,10 @@
+package com.wy.test;
+
+import com.wy.util.DbUtil;
+
+public class Test {
+	public static void main(String[] args) {
+		Connection con =DbUtil.getConnection();
+		
+	}
+}

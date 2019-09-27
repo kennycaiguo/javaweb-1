@@ -1,0 +1,22 @@
+package com.wy.serviceImpl;
+
+import com.wy.dao.ServletDao;
+import com.wy.daoImpl.ServletDaoImpl;
+import com.wy.pojo.User;
+import com.wy.service.AjaxCheck;
+
+public  class AjaxCheckImpl implements AjaxCheck {
+	private ServletDao dao=null;
+	@Override
+	public User CheckUserName(String username) throws Exception {
+		dao =new ServletDaoImpl();
+		return dao.checkUsername(username);
+		
+	}
+
+	@Override
+	public int register(User user) {
+		return dao.registerDao(user);
+	}
+
+}

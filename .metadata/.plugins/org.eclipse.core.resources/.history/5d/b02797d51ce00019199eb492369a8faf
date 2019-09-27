@@ -1,0 +1,6 @@
+package com.wy.dao;
+
+public interface ServletDao {
+	User checkUserName(String username);
+
+}

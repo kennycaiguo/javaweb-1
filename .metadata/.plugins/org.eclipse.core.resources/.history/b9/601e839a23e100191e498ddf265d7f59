@@ -1,0 +1,8 @@
+package com.wy.dao;
+
+import com.wy.pojo.User;
+
+public interface ServletDao {
+	User checkUsername(String username);
+	User registerDao(User user);
+}

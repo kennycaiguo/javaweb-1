@@ -1,0 +1,21 @@
+package com.wy.serviceImpl;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class AjaxLoginServlet
+ */
+public class AjaxLoginServlet extends HttpServlet {
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//设置请求格式
+		req.setCharacterEncoding("utf-8");
+		//设置响应格式
+		resp.setCharacterEncoding("utf-8");
+		resp.setContentType("text/html");
+	}
+}

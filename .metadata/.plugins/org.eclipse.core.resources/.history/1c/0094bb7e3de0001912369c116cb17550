@@ -1,0 +1,7 @@
+package com.wy.service;
+
+import com.wy.pojo.User;
+
+public interface AjaxCheck {
+	boolean CheckUserName(String username);
+}
